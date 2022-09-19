@@ -11,7 +11,6 @@ import java.util.List;
 public class UserServiceImpl extends Util implements UserService {
 
 
-
     public void createUsersTable() {
         String sql = "CREATE TABLE IF NOT EXISTS katadbtest.users (" +
                 "idUsers BIGINT(19) PRIMARY KEY AUTO_INCREMENT UNIQUE NOT NULL," +
@@ -31,7 +30,7 @@ public class UserServiceImpl extends Util implements UserService {
         String sql = "DROP TABLE katadbtest.users";
 
         try (Connection connection = getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -42,10 +41,10 @@ public class UserServiceImpl extends Util implements UserService {
         String sql = "INSERT INTO katadbtest.users (Name, LastName, Age) VALUES (?,?,?)";
 
         try (Connection connection = getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, lastName);
-            preparedStatement.setInt(3,age);
+            preparedStatement.setInt(3, age);
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -57,7 +56,7 @@ public class UserServiceImpl extends Util implements UserService {
         String sql = "DELETE FROM katadbtest.users WHERE idUsers=?";
 
         try (Connection connection = getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setLong(1, id);
 
             preparedStatement.executeUpdate();
@@ -67,10 +66,20 @@ public class UserServiceImpl extends Util implements UserService {
     }
 
     public List<User> getAllUsers() {
+        String sql = "";
+
         return null;
     }
 
     public void cleanUsersTable() {
+        String sql = "TRUNCATE katadbtest.users";
 
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
