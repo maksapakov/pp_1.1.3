@@ -95,7 +95,7 @@
           <database value="mysql" />
           <type value="USER_PASSWORD" />
           <user value="root" />
-          <deprecated-pwd value="bXlwYXNz" />
+          <deprecated-pwd value="MTIzNDU2" />
         </database>
         <properties>
           <auto-commit value="false" />

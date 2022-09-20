@@ -12,10 +12,10 @@ public class UserServiceImpl extends Util implements UserService {
 
     public void createUsersTable() {
         String sql = "CREATE TABLE IF NOT EXISTS katadbtest.users (" +
-                "idUsers BIGINT(19) PRIMARY KEY AUTO_INCREMENT UNIQUE NOT NULL," +
-                "Name VARCHAR(45) NOT NULL," +
-                "LastName VARCHAR(45) NOT NULL," +
-                "Age TINYINT(3) NOT NULL CHECK(Age > 0 AND Age < 150))";
+                "id_users BIGINT(19) PRIMARY KEY AUTO_INCREMENT UNIQUE NOT NULL," +
+                "name VARCHAR(45) NOT NULL," +
+                "last_name VARCHAR(45) NOT NULL," +
+                "age TINYINT(3) NOT NULL CHECK(age > 0 AND age < 150))";
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -37,7 +37,7 @@ public class UserServiceImpl extends Util implements UserService {
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        String sql = "INSERT INTO katadbtest.users (Name, LastName, Age) VALUES (?,?,?)";
+        String sql = "INSERT INTO katadbtest.users (name, last_name, age) VALUES (?,?,?)";
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -53,7 +53,7 @@ public class UserServiceImpl extends Util implements UserService {
     }
 
     public void removeUserById(long id) {
-        String sql = "DELETE FROM katadbtest.users WHERE idUsers=?";
+        String sql = "DELETE FROM katadbtest.users WHERE id_users=?";
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -67,7 +67,7 @@ public class UserServiceImpl extends Util implements UserService {
 
     public List<User> getAllUsers() {
         List<User> userList = new ArrayList<>();
-        String sql = "SELECT idUsers, Name, LastName, Age FROM katadbtest.users";
+        String sql = "SELECT id_users, name, last_name, age FROM katadbtest.users";
 
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement();
@@ -75,10 +75,10 @@ public class UserServiceImpl extends Util implements UserService {
 
             while (resultSet.next()) {
                 User user = new User();
-                user.setId(resultSet.getLong("idUsers"));
-                user.setName(resultSet.getString("Name"));
-                user.setLastName(resultSet.getString("LastName"));
-                user.setAge(resultSet.getByte("Age"));
+                user.setId(resultSet.getLong("id_users"));
+                user.setName(resultSet.getString("name"));
+                user.setLastName(resultSet.getString("last_name"));
+                user.setAge(resultSet.getByte("age"));
 
                 userList.add(user);
             }
@@ -101,6 +101,4 @@ public class UserServiceImpl extends Util implements UserService {
             e.printStackTrace();
         }
     }
-
-
 }
