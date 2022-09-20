@@ -46,6 +46,7 @@ public class UserServiceImpl extends Util implements UserService {
             preparedStatement.setInt(3, age);
 
             preparedStatement.executeUpdate();
+            System.out.println("User с именем - " + name + " добавлен в таблицу");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -85,6 +86,7 @@ public class UserServiceImpl extends Util implements UserService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.out.println(userList);
         return userList;
     }
 
@@ -99,4 +101,6 @@ public class UserServiceImpl extends Util implements UserService {
             e.printStackTrace();
         }
     }
+
+
 }
