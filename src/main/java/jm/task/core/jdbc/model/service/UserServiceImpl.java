@@ -3,9 +3,8 @@ package jm.task.core.jdbc.model.service;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserServiceImpl extends Util implements UserService {
@@ -27,7 +26,7 @@ public class UserServiceImpl extends Util implements UserService {
     }
 
     public void dropUsersTable() {
-        String sql = "DROP TABLE katadbtest.users";
+        String sql = "DROP TABLE IF EXISTS katadbtest.users";
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -66,9 +65,27 @@ public class UserServiceImpl extends Util implements UserService {
     }
 
     public List<User> getAllUsers() {
-        String sql = "";
+        List<User> userList = new ArrayList<>();
+        String sql = "SELECT idUsers, Name, LastName, Age FROM katadbtest.users";
 
-        return null;
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+
+            while (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getLong("idUsers"));
+                user.setName(resultSet.getString("Name"));
+                user.setLastName(resultSet.getString("LastName"));
+                user.setAge(resultSet.getByte("Age"));
+
+                userList.add(user);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userList;
     }
 
     public void cleanUsersTable() {

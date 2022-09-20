@@ -16,11 +16,12 @@ public class Main {
         user.setLastName("Иванов");
         user.setAge(Byte.valueOf("16"));
 
-//        userService.saveUser(user.getName(),user.getLastName(), user.getAge());
+        userService.saveUser(user.getName(),user.getLastName(), user.getAge());
 //        userService.removeUserById(7);
 //        userService.dropUsersTable();
 //        userService.createUsersTable();
 //        userService.cleanUsersTable();
+        userService.getAllUsers();
 /*
         Util.statement.executeUpdate("CREATE TABLE IF NOT EXISTS katadbtest.test (" +
                 "id bigint auto_increment primary key," +
