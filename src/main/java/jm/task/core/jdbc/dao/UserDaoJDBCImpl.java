@@ -88,7 +88,6 @@ public class UserDaoJDBCImpl implements UserDao {
             e.printStackTrace();
         }
     }
-
     public List<User> getAllUsers() {
         List<User> userList = new ArrayList<>();
 
