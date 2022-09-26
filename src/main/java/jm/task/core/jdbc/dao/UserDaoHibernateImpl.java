@@ -1,13 +1,23 @@
 package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
-import jm.task.core.jdbc.util.Util;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
 
 import java.util.List;
 
+import static jm.task.core.jdbc.util.Util.*;
+
 public class UserDaoHibernateImpl implements UserDao {
+
+    private static final String CREATE_TABLE = """
+            CREATE TABLE IF NOT EXISTS katadbtest.users (
+            id_users BIGINT(19) PRIMARY KEY AUTO_INCREMENT UNIQUE NOT NULL,
+            name VARCHAR(45) NOT NULL,
+            last_name VARCHAR(45) NOT NULL,
+            age TINYINT(3) NOT NULL CHECK(age > 0 AND age < 150))
+            """;
 
     public UserDaoHibernateImpl() {
 
@@ -16,7 +26,13 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
+        openTransactionSession();
 
+        Session session = getSession();
+        Query<User> query = session.createQuery(CREATE_TABLE, User.class);
+        query.executeUpdate();
+
+        closeTransactionSession();
     }
 
     @Override
@@ -26,21 +42,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-        Transaction transaction = null;
-        User user = new User(name, lastName, age);
-        try (Session session = Util.getSessionFactory().openSession()) {
-            // start a transaction
-            transaction = session.beginTransaction();
-            // save the student object
-            session.save(user);
-            // commit transaction
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
+
     }
 
     @Override
@@ -49,8 +51,20 @@ public class UserDaoHibernateImpl implements UserDao {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<User> getAllUsers() {
-        return null;
+        openTransactionSession();
+
+        String sql = "SELECT * FROM users";
+
+        Session session = getSession();
+        NativeQuery<User> nativeQuery = session.createNativeQuery(sql, User.class);
+        nativeQuery.executeUpdate();
+        List<User> users = nativeQuery.list();
+
+        closeTransactionSession();
+
+        return users;
     }
 
     @Override
