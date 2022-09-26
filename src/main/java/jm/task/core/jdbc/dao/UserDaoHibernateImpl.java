@@ -1,6 +1,7 @@
 package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
 import java.util.List;
@@ -32,73 +33,90 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
-        openTransactionSession();
+        try (Session openTransactionSession = openTransactionSession();
+             Session session = getSession()) {
 
-        Session session = getSession();
-        session.createNativeQuery(CREATE_TABLE, User.class).executeUpdate();
+            session.createNativeQuery(CREATE_TABLE, User.class).executeUpdate();
 
-        closeTransactionSession();
+        } catch (HibernateException hibernateException) {
+            getTransaction().rollback();
+            hibernateException.printStackTrace();
+        }
     }
 
     @Override
     public void dropUsersTable() {
-        openTransactionSession();
+        try (Session openTransactionSession = openTransactionSession();
+             Session session = getSession()) {
 
-        Session session = getSession();
-        session.createNativeQuery(DROP_TABLE, User.class).executeUpdate();
+            session.createNativeQuery(DROP_TABLE, User.class).executeUpdate();
 
-        closeTransactionSession();
+        } catch (HibernateException hibernateException) {
+            getTransaction().rollback();
+            hibernateException.printStackTrace();
+        }
     }
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-        openTransactionSession();
-
-        Session session = getSession();
-        User user = new User();
-        user.setName(name);
-        user.setLastName(lastName);
-        user.setAge(age);
-        session.merge(user);
-
-        closeTransactionSession();
+        try (Session openTransactionSession = openTransactionSession();
+             Session session = getSession()) {
+            User user = new User();
+            user.setName(name);
+            user.setLastName(lastName);
+            user.setAge(age);
+            session.merge(user);
+        } catch (HibernateException hibernateException) {
+            getTransaction().rollback();
+            hibernateException.printStackTrace();
+        }
     }
 
     @Override
     public void removeUserById(long id) {
-        openTransactionSession();
+        try (Session openTransactionSession = openTransactionSession();
+             Session session = getSession()) {
 
-        User user;
+            User user = (User) session.getReference(User.class, id);
 
-        Session session = getSession();
-        user = (User) session.getReference(User.class, id);
-        session.remove(user);
+            session.remove(user);
 
-        closeTransactionSession();
+        } catch (HibernateException hibernateException) {
+            getTransaction().rollback();
+            hibernateException.printStackTrace();
+        }
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<User> getAllUsers() {
-        openTransactionSession();
 
-        Session session = getSession();
-        List<User> users = session.createQuery("FROM User", User.class).list();
+        List<User> users = null;
 
-        closeTransactionSession();
+        try (Session openTransactionSession = openTransactionSession();
+             Session session = getSession()) {
 
-        System.out.println(users);
+            users = session.createQuery("from User", User.class).list();
 
+            System.out.println(users);
+
+        } catch (HibernateException hibernateException) {
+            getTransaction().rollback();
+            hibernateException.printStackTrace();
+        }
         return users;
     }
 
     @Override
     public void cleanUsersTable() {
-        openTransactionSession();
+        try (Session openTransactionSession = openTransactionSession();
+             Session session = getSession()) {
 
-        Session session = getSession();
-        session.createNativeQuery(CLEAN_TABLE, User.class).executeUpdate();
+            session.createNativeQuery(CLEAN_TABLE, User.class).executeUpdate();
 
-        closeTransactionSession();
+        } catch (HibernateException hibernateException) {
+            getTransaction().rollback();
+            hibernateException.printStackTrace();
+        }
     }
 }

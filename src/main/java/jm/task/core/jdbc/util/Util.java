@@ -18,7 +18,7 @@ public class Util {
     // реализуйте настройку соеденения с БД
     public static final String DB_Driver = "com.mysql.cj.jdbc.Driver";
     public static final String USER_NAME = "root";
-    public static final String PASSWORD = "mypass";
+    public static final String PASSWORD = "123456";
     public static final String URL = "jdbc:mysql://localhost:3306/katadbtest";
 
     private static Session session;
@@ -33,7 +33,7 @@ public class Util {
                 settings.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
                 settings.put(Environment.URL, "jdbc:mysql://localhost:3306/katadbtest");
                 settings.put(Environment.USER, "root");
-                settings.put(Environment.PASS, "mypass");
+                settings.put(Environment.PASS, "123456");
                 settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
 
                 settings.put(Environment.SHOW_SQL, "true");
