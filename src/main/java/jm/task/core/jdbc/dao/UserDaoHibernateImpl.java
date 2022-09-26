@@ -2,8 +2,6 @@ package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
 import org.hibernate.Session;
-import org.hibernate.query.NativeQuery;
-import org.hibernate.query.Query;
 
 import java.util.List;
 
@@ -19,6 +17,14 @@ public class UserDaoHibernateImpl implements UserDao {
             age TINYINT(3) NOT NULL CHECK(age > 0 AND age < 150))
             """;
 
+    private static final String DROP_TABLE = """
+            DROP TABLE if exists katadbtest.users
+            """;
+
+    private static final String CLEAN_TABLE = """
+            TRUNCATE users
+            """;
+
     public UserDaoHibernateImpl() {
 
     }
@@ -29,25 +35,46 @@ public class UserDaoHibernateImpl implements UserDao {
         openTransactionSession();
 
         Session session = getSession();
-        Query<User> query = session.createQuery(CREATE_TABLE, User.class);
-        query.executeUpdate();
+        session.createNativeQuery(CREATE_TABLE, User.class).executeUpdate();
 
         closeTransactionSession();
     }
 
     @Override
     public void dropUsersTable() {
+        openTransactionSession();
 
+        Session session = getSession();
+        session.createNativeQuery(DROP_TABLE, User.class).executeUpdate();
+
+        closeTransactionSession();
     }
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
+        openTransactionSession();
 
+        Session session = getSession();
+        User user = new User();
+        user.setName(name);
+        user.setLastName(lastName);
+        user.setAge(age);
+        session.merge(user);
+
+        closeTransactionSession();
     }
 
     @Override
     public void removeUserById(long id) {
+        openTransactionSession();
 
+        User user;
+
+        Session session = getSession();
+        user = (User) session.getReference(User.class, id);
+        session.remove(user);
+
+        closeTransactionSession();
     }
 
     @Override
@@ -55,20 +82,23 @@ public class UserDaoHibernateImpl implements UserDao {
     public List<User> getAllUsers() {
         openTransactionSession();
 
-        String sql = "SELECT * FROM users";
-
         Session session = getSession();
-        NativeQuery<User> nativeQuery = session.createNativeQuery(sql, User.class);
-        nativeQuery.executeUpdate();
-        List<User> users = nativeQuery.list();
+        List<User> users = session.createQuery("FROM User", User.class).list();
 
         closeTransactionSession();
+
+        System.out.println(users);
 
         return users;
     }
 
     @Override
     public void cleanUsersTable() {
+        openTransactionSession();
 
+        Session session = getSession();
+        session.createNativeQuery(CLEAN_TABLE, User.class).executeUpdate();
+
+        closeTransactionSession();
     }
 }
