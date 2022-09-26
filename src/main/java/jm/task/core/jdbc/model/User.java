@@ -1,12 +1,13 @@
 package jm.task.core.jdbc.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", schema = "katadbtest")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id_users")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name")
@@ -70,3 +71,5 @@ public class User {
                 '}';
     }
 }
+
+

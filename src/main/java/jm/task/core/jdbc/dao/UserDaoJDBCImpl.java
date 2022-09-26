@@ -46,7 +46,10 @@ public class UserDaoJDBCImpl implements UserDao {
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_TABLE)) {
+            connection.setAutoCommit(false);
             preparedStatement.executeUpdate();
+            connection.commit();
+            connection.setAutoCommit(true);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -56,7 +59,10 @@ public class UserDaoJDBCImpl implements UserDao {
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DROP_TABLE)) {
+            connection.setAutoCommit(false);
             preparedStatement.executeUpdate();
+            connection.commit();
+            connection.setAutoCommit(true);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -66,11 +72,14 @@ public class UserDaoJDBCImpl implements UserDao {
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SAVE_USER)) {
+            connection.setAutoCommit(false);
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, lastName);
             preparedStatement.setInt(3, age);
 
             preparedStatement.executeUpdate();
+            connection.commit();
+            connection.setAutoCommit(true);
             System.out.println("User с именем - " + name + " добавлен в таблицу");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -81,9 +90,13 @@ public class UserDaoJDBCImpl implements UserDao {
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_SQL)) {
+            connection.setAutoCommit(false);
+
             preparedStatement.setLong(1, id);
 
             preparedStatement.executeUpdate();
+            connection.commit();
+            connection.setAutoCommit(true);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -95,6 +108,8 @@ public class UserDaoJDBCImpl implements UserDao {
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(SELECT_ALL)) {
 
+            connection.setAutoCommit(false);
+
             while (resultSet.next()) {
                 User user = new User();
                 user.setId(resultSet.getLong("id_users"));
@@ -105,6 +120,8 @@ public class UserDaoJDBCImpl implements UserDao {
                 userList.add(user);
             }
 
+            connection.commit();
+            connection.setAutoCommit(true);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -117,7 +134,12 @@ public class UserDaoJDBCImpl implements UserDao {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CLEAR_TABLE)) {
 
+            connection.setAutoCommit(false);
+
             preparedStatement.executeUpdate();
+            connection.commit();
+
+            connection.setAutoCommit(true);
         } catch (SQLException e) {
             e.printStackTrace();
         }
