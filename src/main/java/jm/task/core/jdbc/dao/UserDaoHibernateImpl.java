@@ -4,6 +4,7 @@ import jm.task.core.jdbc.model.User;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
+import java.util.Collections;
 import java.util.List;
 
 import static jm.task.core.jdbc.util.Util.*;
@@ -38,6 +39,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
             session.createNativeQuery(CREATE_TABLE, User.class).executeUpdate();
 
+            getTransaction().commit();
         } catch (HibernateException hibernateException) {
             getTransaction().rollback();
             hibernateException.printStackTrace();
@@ -51,6 +53,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
             session.createNativeQuery(DROP_TABLE, User.class).executeUpdate();
 
+            getTransaction().commit();
         } catch (HibernateException hibernateException) {
             getTransaction().rollback();
             hibernateException.printStackTrace();
@@ -66,6 +69,9 @@ public class UserDaoHibernateImpl implements UserDao {
             user.setLastName(lastName);
             user.setAge(age);
             session.merge(user);
+
+            getTransaction().commit();
+
         } catch (HibernateException hibernateException) {
             getTransaction().rollback();
             hibernateException.printStackTrace();
@@ -81,6 +87,8 @@ public class UserDaoHibernateImpl implements UserDao {
 
             session.remove(user);
 
+            getTransaction().commit();
+
         } catch (HibernateException hibernateException) {
             getTransaction().rollback();
             hibernateException.printStackTrace();
@@ -91,7 +99,7 @@ public class UserDaoHibernateImpl implements UserDao {
     @SuppressWarnings("unchecked")
     public List<User> getAllUsers() {
 
-        List<User> users = null;
+        List<User> users = Collections.emptyList();
 
         try (Session openTransactionSession = openTransactionSession();
              Session session = getSession()) {
@@ -99,6 +107,8 @@ public class UserDaoHibernateImpl implements UserDao {
             users = session.createQuery("from User", User.class).list();
 
             System.out.println(users);
+
+            getTransaction().commit();
 
         } catch (HibernateException hibernateException) {
             getTransaction().rollback();
@@ -113,6 +123,8 @@ public class UserDaoHibernateImpl implements UserDao {
              Session session = getSession()) {
 
             session.createNativeQuery(CLEAN_TABLE, User.class).executeUpdate();
+
+            getTransaction().commit();
 
         } catch (HibernateException hibernateException) {
             getTransaction().rollback();
