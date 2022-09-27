@@ -20,13 +20,13 @@ public class Main {
         User user2 = new User("Андрей", "Коновалов", (byte) 38);
         User user3 = new User("Владислав", "Пельш", (byte) 46);
 
-//        userDaoHibernate.createUsersTable();
-//        userDaoHibernate.saveUser(user.getName(), user.getLastName(), user.getAge());
-//        userDaoHibernate.saveUser(user1.getName(), user1.getLastName(), user1.getAge());
-//        userDaoHibernate.saveUser(user2.getName(), user2.getLastName(), user2.getAge());
-//        userDaoHibernate.saveUser(user3.getName(), user3.getLastName(), user3.getAge());
+        userDaoHibernate.createUsersTable();
+        userDaoHibernate.saveUser(user.getName(), user.getLastName(), user.getAge());
+        userDaoHibernate.saveUser(user1.getName(), user1.getLastName(), user1.getAge());
+        userDaoHibernate.saveUser(user2.getName(), user2.getLastName(), user2.getAge());
+        userDaoHibernate.saveUser(user3.getName(), user3.getLastName(), user3.getAge());
 
-//        userDaoHibernate.getAllUsers();
+        userDaoHibernate.getAllUsers();
 //        userDaoHibernate.removeUserById(1);
 //        userDaoHibernate.cleanUsersTable();
 //        userDaoHibernate.dropUsersTable();
